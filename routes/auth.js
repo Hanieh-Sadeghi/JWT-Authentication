@@ -1,12 +1,31 @@
-const router = require ('express').Router();
+const router = require("express").Router();
 
-router.post('/signup' ,(req ,res) => {
-    const {password , email} = req.body;
+const { check, validationResult } = require("express-validator");
 
-    console.log(password, email)
-    
-    res.send('Auth route working')
-})
+router.post(
+  "/signup",
+  [
+    check("email", " Please provide a valid email").isEmail(),
+    check(
+      "password",
+      "Please provide a password that is greater than 5 characters"
+    ).isLength({
+      min: 6,
+    }),
+  ],
+  (req, res) => {
+    const { password, email } = req.body;
 
+    const errors = validationResult(req);
 
-module.exports = router
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array(),
+      });
+    }
+
+    res.send("Validation Past");
+  }
+);
+
+module.exports = router;
