@@ -55,4 +55,8 @@ router.post(
   }
 );
 
+router.get('/all' , (req , res) =>{
+    res.json(users)
+})
+
 module.exports = router;
