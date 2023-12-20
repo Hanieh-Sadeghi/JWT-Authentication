@@ -5,6 +5,8 @@ const { users } = require("../db");
 
 const bcrypt = require('bcrypt')
 
+const JWT = require('jsonwebtoken')
+
 router.post(
   "/signup",
   [
@@ -32,7 +34,7 @@ router.post(
     });
 
     if(user){
-        res.status(400).json({
+        return res.status(400).json({
             'errors': [
                 {
                     'msg': " This user already exists"
@@ -42,16 +44,20 @@ router.post(
     }
 
     
-    let hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
     
     users.push({
         email,
         password:hashedPassword
     })
 
-    console.log(hashedPassword)
+    const token = await JWT.sign({
+      email
+    })
 
-    res.send("Validation Past");
+    res.json({
+      token
+    });
   }
 );
 
