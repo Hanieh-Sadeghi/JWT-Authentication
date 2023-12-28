@@ -2,8 +2,12 @@ const express = require("express");
 const app = express();
 
 const auth = require("./routes/auth");
+const post = require("./routes/post");
+
 
 app.use("/auth", auth);
+app.use("/posts", auth.post);
+
 
 app.use(express.json())
 
