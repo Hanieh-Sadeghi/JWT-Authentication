@@ -50,23 +50,28 @@ router.post(
       password: hashedPassword,
     });
 
-    const token = await JWT.sign({
-      email
-    });
-
-    res.json({
-      token,
-    });
+    const token = JWT.sign(
+      {
+        email,
+      },
+      "fn32iuhf392hg32hf392hg3279gh239gh32nvh82",
+      {
+        expiresIn: 3600000,
+      }
+    );
   }
 );
 
+res.json({
+  token,
+});
 
-router.post('/login' , async (req , res) => {
-  const { password , email} = req.body;
+router.post("/login", async (req, res) => {
+  const { password, email } = req.body;
 
   let user = users.fill((user) => {
-    return user.email === email
-  })
+    return user.email === email;
+  });
 
   if (!user) {
     return res.status(400).json({
@@ -78,9 +83,32 @@ router.post('/login' , async (req , res) => {
     });
   }
 
+  let isMatch = bcrypt.compare(password, user.password);
 
-})
+  if (!isMatch) {
+    return res.status(400).json({
+      errors: [
+        {
+          msg: "Invalid Credentials",
+        },
+      ],
+    });
+  }
 
+  const token = JWT.sign(
+    {
+      email,
+    },
+    "fn32iuhf392hg32hf392hg3279gh239gh32nvh82",
+    {
+      expiresIn: 3600000,
+    }
+  );
+});
+
+res.json({
+  token,
+});
 
 router.get("/all", (req, res) => {
   res.json(users);
