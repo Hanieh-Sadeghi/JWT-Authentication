@@ -51,7 +51,7 @@ router.post(
     });
 
     const token = await JWT.sign({
-      email,
+      email
     });
 
     res.json({
@@ -59,6 +59,28 @@ router.post(
     });
   }
 );
+
+
+router.post('/login' , async (req , res) => {
+  const { password , email} = req.body;
+
+  let user = users.fill((user) => {
+    return user.email === email
+  })
+
+  if (!user) {
+    return res.status(400).json({
+      errors: [
+        {
+          msg: "Invalid Credentials",
+        },
+      ],
+    });
+  }
+
+
+})
+
 
 router.get("/all", (req, res) => {
   res.json(users);
