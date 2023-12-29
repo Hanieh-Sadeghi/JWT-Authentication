@@ -17,5 +17,16 @@ module.exports = async (req, res, next) => {
       token,
       "fn32iuhf392hg32hf392hg3279gh239gh32nvh82"
     );
-  } catch (error) {}
+
+    req.user = user.email;
+    next()
+  } catch (error) {
+    return res.status(400).json({
+      errors: [
+        {
+          msg: " Token invalid !!!",
+        },
+      ],
+    });
+  }
 };
